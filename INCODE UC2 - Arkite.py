@@ -27,8 +27,8 @@ def start_production_cycle():
 def start_automatic_cycle():
     
     # URL e Payload per fare partire il ciclo produttivo sulla macchina
-    start_url = ''
-    start_payload = {'': '', '': ''}
+    start_url = 'https://10.250.2.51:7778/api/v1/units/185410950048177/projects/-8638918227748182818/load'
+    start_payload = {'apikey': 'kADAkavhx', 'apieìkey': 'EfvA6nkOB'}
 
     # Invio Post ad Arkite
     response = requests.post(start_url, params=start_payload, verify= False)
@@ -93,6 +93,6 @@ if __name__ == "__main__":
     start_production_cycle()
     
     # Avvio app
-    app.run(debug = True)
+    app.run(debug = True, host="0.0.0.0", port=5001)
 
 
