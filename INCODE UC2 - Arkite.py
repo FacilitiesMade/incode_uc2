@@ -6,6 +6,8 @@ urllib3.disable_warnings()
 
 app = Flask(__name__)
 
+next_production_cycle = False
+
 # Funzione per fare partire il ciclo produttivo sulla macchina
 def start_production_cycle():
 
@@ -52,14 +54,15 @@ def homepage():
 # Funzione per gestire i post dalla terza parte
 @app.route('/third_party_post', methods=['POST'])
 def handle_third_party_post():
+    global next_production_cycle
     data = request.get_json()
     print("Post third party:", data)
 
     # A seconda del valore ricevuto si decide quale ciclo fare partire
     if data['automatic'] == 'False':
-        start_production_cycle()
+        next_production_cycle = False
     elif data['automatic'] == 'True':
-        start_automatic_cycle()
+        next_production_cycle = True
 
     return jsonify({"message": "Post ricevuto e elaborato"})
 
@@ -67,14 +70,21 @@ def handle_third_party_post():
 @app.route('/machine_post', methods = ['POST'])
 def handle_machine_post():
 
+    global next_production_cycle
+
     # Per ora, stamperemo semplicemente i dati ricevuti
     data = request.get_json()
     print("Post dalla macchina produttiva:", data)
 
     if data['EndCycle'] == 'True':
         print('Assemblaggio finito')
-
+        if next_production_cycle:
+            start_automatic_cycle()
+        else:
+            start_production_cycle()
     return jsonify({"message": "Post ricevuto e elaborato"})
+
+
 
 
 if __name__ == "__main__":
