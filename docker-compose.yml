@@ -1,0 +1,11 @@
+services:
+  web:
+    image: "ghcr.io/facilitiesmade/incode-uc2-middle:latest"
+    ports:
+      - "5001:5000"
+  redis:
+    image: "redis:7.2.4-alpine"
+
+network:
+  uc2_net:
+    type: bridge
